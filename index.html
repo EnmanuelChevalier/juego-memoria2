@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juego de Memoria Numérica</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+    <style>
+      /* Fondo y cuerpo */
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #87ceeb, #b0e0e6); /* Azul cielo claro */
+        color: #333; /* Cambié el color del texto para que contraste con el fondo claro */
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("https://www.transparenttextures.com/patterns/stardust.png"),
+          radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent 70%);
+        animation: estrellas 20s linear infinite;
+        opacity: 0.4;
+        z-index: -1;
+      }
+
+      body::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 200%;
+        background: url("https://www.transparenttextures.com/patterns/stardust.png");
+        animation: nebulosa 50s linear infinite;
+        opacity: 0.2;
+        z-index: -2;
+      }
+
+      /* Animaciones */
+      @keyframes estrellas {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(-50%, -50%);
+        }
+      }
+
+      @keyframes nebulosa {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(-25%, -25%);
+        }
+      }
+
+      /* Contenedor principal */
+      .modo-seleccion {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 20px;
+        gap: 20px;
+      }
+
+      /* Estilo de las cartas */
+      .modo-carta {
+        background: rgba(255, 255, 255, 0.8); /* Más opaco para que contraste con el fondo claro */
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(135, 206, 235, 0.5); /* Borde azul cielo */
+        padding: 50px;
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        min-height: 450px;
+        width: 48%;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .modo-carta:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 15px 40px rgba(135, 206, 235, 0.5); /* Sombra azul cielo */
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .modo-carta h2::before {
+        content: "🧠";
+        font-size: 1.5em;
+      }
+
+      .modo-carta p::before {
+        content: "🚀 ";
+        margin-right: 5px;
+      }
+
+      /* Iconos y texto adicional para modos */
+      .modo-carta .texto-adicional::before {
+        margin-right: 5px;
+      }
+
+      .modo-facil .texto-adicional::before {
+        content: "😊 "; /* Icono para modo fácil */
+      }
+
+      .modo-dificil .texto-adicional::before {
+        content: "🧠 "; /* Icono para modo difícil */
+      }
+
+      .modo-carta button {
+        background: linear-gradient(45deg, #00b7eb, #6a0dad); /* Colores ajustados al fondo claro */
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.3em;
+        transition: all 0.3s;
+      }
+
+      .modo-carta button:hover {
+        transform: scale(1.05);
+        background: linear-gradient(45deg, #6a0dad, #00b7eb);
+      }
+
+      h1 {
+        color: #333; /* Color oscuro para que contraste */
+      }
+
+      h1::before {
+        content: "🎮 ";
+      }
+
+      #puntuacionTexto {
+        color: #333;
+      }
+
+      #puntuacionTexto::before {
+        content: "⭐";
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Juego de Memoria Numérica 🔢</h1>
+      <div id="puntuacionTexto" style="position: absolute; top: 10px; right: 10px">Puntos: 0</div>
+      <br />
+      <br />
+      <div class="modo-seleccion">
+        <div class="modo-carta modo-facil">
+          <h2>Modo Fácil</h2>
+          <p>Adivina números en un rango progresivo</p>
+          <p>Gana puntos según el intento en que aciertes</p>
+          <p class="texto-adicional">¡Perfecto1 para empezar y relajarte!</p>
+          <button onclick="window.location.href='facil.html'">Jugar</button>
+        </div>
+
+        <div class="modo-carta modo-dificil">
+          <h2>Modo Difícil</h2>
+          <p>Memoriza y recuerda los números previos</p>
+          <p>Los niveles aumentan en complejidad</p>
+          <p class="texto-adicional">¡Desafía tu mente al máximo!</p>
+          <button onclick="window.location.href='dificil.html'">Jugar</button>
+        </div>
+      </div>
+
+    
+
+    <!-- Carga de scripts -->
+    <script src="js/facil.js"></script>
+    <script src="js/dificil.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
