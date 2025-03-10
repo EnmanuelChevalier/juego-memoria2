@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego Difícil</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1c1c1c;
+            text-align: center;
+            color: white;
+        }
+
+        h1 {
+            font-family: 'Lobster', cursive;
+            font-size: 48px;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+            color: #ff0000;
+            margin-bottom: 20px;
+        }
+
+        .carta {
+            background: #222;
+            color: white;
+            width: 280px;
+            height: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 15px;
+            border: 5px solid #ff0000;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Georgia', serif;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .carta.voltear {
+            transform: rotateY(180deg);
+        }
+
+        .carta::before,
+        .carta::after {
+            content: '\2665';
+            font-size: 40px;
+            color: #ff0000;
+            position: absolute;
+        }
+
+        .carta::before {
+            top: 10px;
+            left: 10px;
+        }
+
+        .carta::after {
+            bottom: 10px;
+            right: 10px;
+            transform: rotate(180deg);
+        }
+
+        .carta h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .carta p {
+            font-size: 18px;
+        }
+
+        input {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 2px solid #ff0000;
+            background: #333;
+            color: white;
+            text-align: center;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            background: #ff0000;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #d81515;
+        }
+
+        .boton-volver {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background: #DC143C;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .boton-volver:hover {
+            background: #B22222;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <button class="boton-volver" onclick="window.location.href='index.html';">Volver</button>
+    <h1>Juego de Números</h1>
+
+    <div class="carta" id="carta">
+        <h2>Modo Difícil</h2>
+        <p id="mensaje">Ingresa un número de 3 a 5 cifras:</p>
+        <input type="text" id="numeroInput" placeholder="Ejemplo: 1234">
+        <button onclick="verificarNumeroNuevo(); voltearCarta();">Aceptar</button>
+        <p id="puntos">Puntos: 0</p>
+    </div>
+
+    <script>
+        let nivel = 1;
+        let secuenciaNumeros = [];
+        let puntos = 0;
+        let esperandoNumeroAnterior = false;
+        let ultimoNumeroNuevo = "";
+
+        function iniciarJuegoDificil() {
+            nivel = 1;
+            secuenciaNumeros = [];
+            puntos = 0;
+            esperandoNumeroAnterior = false;
+            document.getElementById("mensaje").innerHTML = "Ingresa un número de 3 a 5 cifras:";
+            document.getElementById("puntos").innerHTML = "Puntos: 0";
+        }
+
+        function voltearCarta() {
+            const carta = document.getElementById("carta");
+            carta.classList.add("voltear");
+            setTimeout(() => carta.classList.remove("voltear"), 600);
+        }
+
+        function verificarNumeroNuevo() {
+            let numeroIngresado = document.getElementById("numeroInput").value.trim();
+
+            if (esperandoNumeroAnterior) {
+                verificarNumeroAnterior(numeroIngresado);
+                return;
+            }
+
+            if (validarNumero(numeroIngresado)) {
+                if (nivel > 1) {
+                    document.getElementById("mensaje").innerHTML = "Ahora ingresa el número del nivel anterior:";
+                    esperandoNumeroAnterior = true;
+                } else {
+                    ultimoNumeroNuevo = numeroIngresado;
+                    secuenciaNumeros.push(ultimoNumeroNuevo);
+                    puntos++;
+                    document.getElementById("mensaje").innerHTML = `✅ Nivel ${nivel} superado. Ingresa otro número.`;
+                    document.getElementById("puntos").innerHTML = `Puntos: ${puntos}`;
+                    document.getElementById("numeroInput").value = "";
+                    nivel++;
+                }
+            } else {
+                document.getElementById("mensaje").innerHTML = "❌ Número inválido. Debe tener entre 3 y 5 cifras.";
+            }
+        }
+
+        function verificarNumeroAnterior(numeroIngresado) {
+            if (numeroIngresado !== secuenciaNumeros[nivel - 2]) {
+                document.getElementById("mensaje").innerHTML = `❌ Número incorrecto. Fin del juego. Puntos: ${puntos}`;
+                setTimeout(() => location.reload(), 3000);
+                return;
+            }
+
+            secuenciaNumeros.push(ultimoNumeroNuevo);
+            puntos++;
+            document.getElementById("mensaje").innerHTML = `✅ Nivel ${nivel} superado. Ingresa otro número.`;
+            document.getElementById("puntos").innerHTML = `Puntos: ${puntos}`;
+            document.getElementById("numeroInput").value = "";
+            nivel++;
+            esperandoNumeroAnterior = false;
+        }
+
+        function validarNumero(numero) {
+            return /^[0-9]{3,5}$/.test(numero);
+        }
+
+        window.onload = iniciarJuegoDificil;
+    </script>
+</body>
+</html>
